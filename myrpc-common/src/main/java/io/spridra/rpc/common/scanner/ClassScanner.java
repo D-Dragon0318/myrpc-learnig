@@ -78,4 +78,71 @@ public class ClassScanner {
     }
 
 
+    /**
+     * 扫描Jar文件中指定包下的所有类信息
+     * @param packageName 扫描的包名
+     * @param classNameList 完成类名存放的List集合
+     * @param recursive 是否递归调用
+     * @param packageDirName 当前包名的前面部分的名称
+     * @param url 包的url地址
+     * @return 处理后的包名，以供下次调用使用
+     * @throws IOException
+     */
+    private static String findAndAddClassesInPackageByJar(String packageName, List<String> classNameList, boolean recursive, String packageDirName, URL url) throws IOException {
+        //如果是jar包文件
+        //定义一个JarFile
+        JarFile jar = ((JarURLConnection) url.openConnection()).getJarFile();
+        //从此jar包 得到一个枚举类
+        Enumeration<JarEntry> entries = jar.entries();
+        //同样的进行循环迭代
+        while (entries.hasMoreElements()) {
+            //获取jar里的一个实体 可以是目录 和一些jar包里的其他文件 如META-INF等文件
+            JarEntry entry = entries.nextElement();
+            String name = entry.getName();
+            //如果是以/开头的
+            if (name.charAt(0) == '/') {
+                //获取后面的字符串
+                name = name.substring(1);
+            }
+            //如果前半部分和定义的包名相同
+            if (name.startsWith(packageDirName)) {
+                int idx = name.lastIndexOf('/');
+                //如果以"/"结尾 是一个包
+                if (idx != -1) {
+                    //获取包名 把"/"替换成"."
+                    packageName = name.substring(0, idx).replace('/', '.');
+                }
+                //如果可以迭代下去 并且是一个包
+                // recursive 处理类文件还在要扫描的包的更深层次中
+                if ((idx != -1) || recursive){
+                    //如果是一个.class文件 而且不是目录
+                    if (name.endsWith(CLASS_FILE_SUFFIX) && !entry.isDirectory()) {
+                        //去掉后面的".class" 获取真正的类名
+                        String className = name.substring(packageName.length() + 1, name.length() - 6);
+                        classNameList.add(packageName + '.' + className);
+                    }
+                }
+            }
+        }
+        return packageName;
+    }
+    /*
+      io/
+      └── spridra/
+           └── rpc/
+               └── example/
+                   └── service/
+                       ├── HelloService.class
+                       └── impl/
+                           └── PaymentServiceImpl.class
+        1.找到 io/spridra/rpc/example/service/HelloService.class
+            符合 packageDirName
+            是 .class 文件
+            添加 io.spridra.rpc.example.service.HelloService
+        2.找到 io/spridra/rpc/example/service/impl/PaymentServiceImpl.class
+            符合 packageDirName
+            是 .class 文件
+            添加 io.spridra.rpc.example.service.impl.PaymentServiceImpl
+     */
+
 }
