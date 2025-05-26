@@ -145,4 +145,50 @@ public class ClassScanner {
             添加 io.spridra.rpc.example.service.impl.PaymentServiceImpl
      */
 
+    /**
+     * 扫描指定包下的所有类信息
+     * @param packageName 指定的包名
+     * @return 指定包下所有的完整类名的List集合
+     * @throws Exception
+     */
+    public static List<String> getClassNameList(String packageName) throws Exception{
+        //第一个class类的集合
+        List<String> classNameList = new ArrayList<String>();
+        //是否循环迭代
+        boolean recursive = true;
+        //获取包的名字 并进行替换
+        String packageDirName = packageName.replace('.', '/');
+        //定义一个枚举的集合 并进行循环来处理这个目录下的things
+        /*
+          String packageDirName = "io/spridra/rpc/example/service";
+          Enumeration<URL> dirs = Thread.currentThread().getContextClassLoader().getResources(packageDirName);
+          file:/D:/project/myapp/target/classes/io/spridra/rpc/example/service
+          jar:file:/D:/lib/my-service.jar!/io/spridra/rpc/example/service
+          */
+        Enumeration<URL> dirs = Thread.currentThread().getContextClassLoader().getResources(packageDirName);
+        //循环迭代下去
+        while (dirs.hasMoreElements()){
+            //获取下一个元素
+            URL url = dirs.nextElement();
+            //得到协议的名称
+            String protocol = url.getProtocol();
+            //如果是以文件的形式保存在服务器上
+            if (PROTOCOL_FILE.equals(protocol)) {
+                //获取包的物理路径
+                // file:/D:/project/myrpc-common/target/classes/io/spridra/rpc/common/scannerD:/project/myapp/target/classes/io/spridra/rpc/example/service
+                // url.getFile()
+                // /D:/project/myrpc-common/target/classes/io/spridra/rpc/common/scannerD:/project/myapp/target/classes/io/spridra/rpc/example/service
+                // URLDecoder.decode(..., "UTF-8")
+                //D:\project\myrpc-common\target\classes\io\spridra\rpc\common\scanner
+                String filePath = URLDecoder.decode(url.getFile(), "UTF-8");
+                //以文件的方式扫描整个包下的文件 并添加到集合中
+                findAndAddClassesInPackageByFile(packageName, filePath, recursive, classNameList);
+            } else if (PROTOCOL_JAR.equals(protocol)){
+                // jar:file:/D:/lib/my-service.jar!/io/spridra/rpc/example/service
+                packageName = findAndAddClassesInPackageByJar(packageName, classNameList, recursive, packageDirName, url);
+            }
+        }
+        return classNameList;
+    }
+
 }
