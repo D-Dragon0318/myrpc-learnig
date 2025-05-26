@@ -1,5 +1,6 @@
 autoDetectedPackages:
 - io.spridra.rpc.annotation
+- io.spridra.rpc.common
 enableAutoDetect: true
 entryDisplayConfig:
   excludedPathPatterns: []
