@@ -1,6 +1,7 @@
 autoDetectedPackages:
 - io.spridra.rpc.annotation
 - io.spridra.rpc.common
+- io.spridra.rpc.provider
 - io.spridra.rpc.test
 enableAutoDetect: true
 entryDisplayConfig:
