@@ -12,7 +12,7 @@
         <module>rpc-annotation</module>
         <module>myrpc-common</module>
         <module>myrpc-test</module>
-        <module>myrpc-test/myrpc-test-scanner</module>
+        <module>myrpc-provider</module>
     </modules>
 
     <properties>
