@@ -1,7 +1,7 @@
 package io.spridra.rpc.common.scanner;
 
 import io.spridra.rpc.annotation.RpcService;
-import io.spridra.rpc.common.scanner.ClassScanner;
+import io.spridra.rpc.common.helper.RpcServiceHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,11 +48,12 @@ public class RpcServiceScanner extends ClassScanner {
                     LOGGER.info("group===>>> " + rpcService.group());
 
                     String serviceName = getServiceName(rpcService);
-                    String key = serviceName.concat(rpcService.version()).concat(rpcService.group());
+                    // String key = serviceName.concat(rpcService.version()).concat(rpcService.group());
+                    String key = RpcServiceHelper.buildServiceKey(serviceName, rpcService.version(), rpcService.group());
                     handlerMap.put(key, clazz.newInstance());
                 }
             } catch (Exception e) {
-                LOGGER.error("scan classes throws exception: {}", e);
+                LOGGER.error("scan classes throws exception: {}", e.toString());
             }
         });
         return handlerMap;
@@ -63,7 +64,7 @@ public class RpcServiceScanner extends ClassScanner {
      */
     private static String getServiceName(RpcService rpcService){
         //优先使用interfaceClass
-        Class clazz = rpcService.interfaceClass();
+        Class<?> clazz = rpcService.interfaceClass();
         if (clazz == void.class){
             return rpcService.interfaceClassName();
         }
