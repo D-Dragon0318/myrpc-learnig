@@ -1,6 +1,8 @@
 package io.spridra.rpc.protocol.request;
 
 import io.spridra.rpc.protocol.base.RpcMessage;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @Author: Spridra
@@ -8,7 +10,7 @@ import io.spridra.rpc.protocol.base.RpcMessage;
  * @Describe: 请求消息类
  * @Version: 1.0
  */
-
+@Data
 public class RpcRequest extends RpcMessage {
     /**
      * 序列化ID
