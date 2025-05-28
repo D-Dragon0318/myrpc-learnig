@@ -15,6 +15,7 @@
         <module>myrpc-test-scanner</module>
         <module>myrpc-test-provider</module>
         <module>myrpc-test-consumer</module>
+        <module>myrpc-test-api</module>
     </modules>
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

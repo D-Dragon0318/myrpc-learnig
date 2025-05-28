@@ -30,9 +30,9 @@ public class RpcTestConsumerHandler extends SimpleChannelInboundHandler<RpcProto
         RpcProtocol<RpcRequest> protocol = new RpcProtocol<RpcRequest>();
         protocol.setHeader(RpcHeaderFactory.getRequestHeader("jdk"));
         RpcRequest request = new RpcRequest();
-        request.setClassName("io.spridra.rpc.test.DemoService");
+        request.setClassName("io.spridra.rpc.test.api.DemoService");
         request.setGroup("spridra");
-        request.setMethodName("hello world");
+        request.setMethodName("");
         request.setParameters(new Object[]{"spridra"});
         request.setParameterTypes(new Class[]{String.class});
         request.setVersion("1.0.0");
