@@ -17,6 +17,7 @@
         <module>myrpc-constants</module>
         <module>myrpc-serialization</module>
         <module>myrpc-codec</module>
+        <module>myrpc-consumer</module>
     </modules>
 
     <properties>
