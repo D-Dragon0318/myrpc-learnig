@@ -10,6 +10,8 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import io.spridra.rpc.codec.RpcDecoder;
+import io.spridra.rpc.codec.RpcEncoder;
 import io.spridra.rpc.common.handler.RpcProviderHandler;
 import io.spridra.rpc.common.server.api.Server;
 import org.apache.commons.lang3.StringUtils;
@@ -22,7 +24,7 @@ import java.util.Map;
 /**
  * @Author: Spridra
  * @CreateTime: 2025-05-27 11:35
- * @Describe:
+ * @Describe: 服务提供端
  * @Version: 1.0
  */
 
@@ -55,9 +57,11 @@ public class BaseServer implements Server {
                         @Override
                         protected void initChannel(SocketChannel channel) throws Exception {
                             channel.pipeline()
-                                    //TODO 预留编解码，需要实现自定义协议
-                                    .addLast(new StringDecoder())
-                                    .addLast(new StringEncoder())
+                                    //实现自定义协议
+                                    // .addLast(new StringDecoder())
+                                    .addLast(new RpcDecoder())
+                                    // .addLast(new StringEncoder())
+                                    .addLast(new RpcEncoder())
                                     .addLast(new RpcProviderHandler(handlerMap));
                         }
                     })
