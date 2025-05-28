@@ -15,6 +15,7 @@
         <module>myrpc-provider</module>
         <module>myrpc-protocol</module>
         <module>myrpc-constants</module>
+        <module>myrpc-serialization</module>
     </modules>
 
     <properties>
