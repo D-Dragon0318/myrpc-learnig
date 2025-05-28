@@ -5,7 +5,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.util.CharsetUtil;
 import io.spridra.rpc.common.utils.SerializationUtils;
-import io.spridra.rpc.contants.RpcConstants;
+import io.spridra.rpc.constants.RpcConstants;
 import io.spridra.rpc.protocol.RpcProtocol;
 import io.spridra.rpc.protocol.enumeration.RpcType;
 import io.spridra.rpc.protocol.header.RpcHeader;

@@ -3,6 +3,7 @@ package io.spridra.rpc.common.handler;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
+import io.spridra.rpc.constants.RpcConstants;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.spridra.rpc.common.helper.RpcServiceHelper;
 import io.spridra.rpc.common.threadpool.ServerThreadPool;
@@ -13,6 +14,8 @@ import io.spridra.rpc.protocol.header.RpcHeader;
 import com.alibaba.fastjson.JSONObject;
 import io.spridra.rpc.protocol.request.RpcRequest;
 import io.spridra.rpc.protocol.response.RpcResponse;
+import net.sf.cglib.reflect.FastClass;
+import net.sf.cglib.reflect.FastMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,8 +34,11 @@ public class RpcProviderHandler extends SimpleChannelInboundHandler<RpcProtocol<
 
     private final Map<String, Object> handlerMap;
 
-    public RpcProviderHandler(Map<String, Object> handlerMap) {
+    private final String reflectType;
+
+    public RpcProviderHandler(String reflectType,Map<String, Object> handlerMap) {
         this.handlerMap = handlerMap;
+        this.reflectType = reflectType;
     }
 
     @Override
@@ -113,6 +119,22 @@ public class RpcProviderHandler extends SimpleChannelInboundHandler<RpcProtocol<
     }
     //TODO 目前使用JDK动态代理方式，此处埋点
     private Object invokeMethod(Object serviceBean, Class<?> serviceClass, String methodName, Class<?>[] parameterTypes, Object[] parameters) throws Throwable {
+        switch (this.reflectType){
+            case RpcConstants.REFLECT_TYPE_JDK:
+                return this.invokeJDKMethod(serviceBean, serviceClass, methodName, parameterTypes, parameters);
+            case RpcConstants.REFLECT_TYPE_CGLIB:
+                return this.invokeCGLibMethod(serviceBean, serviceClass, methodName, parameterTypes, parameters);
+            default:
+                throw new IllegalArgumentException("not support reflect type");
+        }
+    }
+
+    /**
+     * JDK代理方式
+     */
+    private Object invokeJDKMethod(Object serviceBean, Class<?> serviceClass, String methodName, Class<?>[] parameterTypes, Object[] parameters) throws Throwable {
+        // JDK reflect
+        logger.info("use jdk reflect type invoke method...");
         //通过方法名和参数类型获取方法
         Method method = serviceClass.getMethod(methodName, parameterTypes);
         //设置方法可访问
@@ -120,7 +142,16 @@ public class RpcProviderHandler extends SimpleChannelInboundHandler<RpcProtocol<
         //执行方法
         return method.invoke(serviceBean, parameters);
     }
-
+    /**
+     * CGLib代理方式
+     */
+    private Object invokeCGLibMethod(Object serviceBean, Class<?> serviceClass, String methodName, Class<?>[] parameterTypes, Object[] parameters) throws Throwable {
+        // Cglib reflect
+        logger.info("use cglib reflect type invoke method...");
+        FastClass serviceFastClass = FastClass.create(serviceClass);
+        FastMethod serviceFastMethod = serviceFastClass.getMethod(methodName, parameterTypes);
+        return serviceFastMethod.invoke(serviceBean, parameters);
+    }
     /**
      * Netty的异常捕获方法
      */

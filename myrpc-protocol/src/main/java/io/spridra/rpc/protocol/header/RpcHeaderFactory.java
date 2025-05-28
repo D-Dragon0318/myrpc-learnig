@@ -1,7 +1,7 @@
 package io.spridra.rpc.protocol.header;
 
 import io.spridra.rpc.common.scanner.id.IdFactory;
-import io.spridra.rpc.contants.RpcConstants;
+import io.spridra.rpc.constants.RpcConstants;
 import io.spridra.rpc.protocol.enumeration.RpcType;
 
 /**
