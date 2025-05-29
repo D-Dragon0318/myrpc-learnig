@@ -50,6 +50,7 @@ public class RpcServiceScanner extends ClassScanner {
                     String serviceName = getServiceName(rpcService);
                     // String key = serviceName.concat(rpcService.version()).concat(rpcService.group());
                     String key = RpcServiceHelper.buildServiceKey(serviceName, rpcService.version(), rpcService.group());
+                    //服务启动后，将服务构建
                     handlerMap.put(key, clazz.newInstance());
                 }
             } catch (Exception e) {
