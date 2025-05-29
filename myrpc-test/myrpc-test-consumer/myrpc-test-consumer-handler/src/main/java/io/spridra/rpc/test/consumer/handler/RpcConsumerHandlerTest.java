@@ -1,6 +1,7 @@
 package io.spridra.rpc.test.consumer.handler;
 
 import io.spridra.rpc.consumer.common.RpcConsumer;
+import io.spridra.rpc.consumer.common.callback.AsyncRPCCallback;
 import io.spridra.rpc.consumer.common.context.RpcContext;
 import io.spridra.rpc.consumer.common.future.RPCFuture;
 import io.spridra.rpc.protocol.RpcProtocol;
@@ -24,8 +25,19 @@ public class RpcConsumerHandlerTest {
 
     public static void mainVoid(String[] args) throws Exception {
         RpcConsumer consumer = RpcConsumer.getInstance();
-        consumer.sendRequest(getRpcRequestProtocol());
-        LOGGER.info("无需获取返回的结果数据");
+        RPCFuture rpcFuture = consumer.sendRequest(getRpcRequestProtocol());
+        rpcFuture.addCallback(new AsyncRPCCallback() {
+            @Override
+            public void onSuccess(Object result) {
+                LOGGER.info("从服务消费者获取到的数据===>>>" + result);
+            }
+
+            @Override
+            public void onException(Exception e) {
+                LOGGER.info("抛出了异常===>>>" + e);
+            }
+        });
+        Thread.sleep(200);
         consumer.close();
     }
     public static void mainAsync(String[] args) throws Exception {
@@ -57,7 +69,7 @@ public class RpcConsumerHandlerTest {
         request.setParameterTypes(new Class[]{String.class});
         request.setVersion("1.0.0");
         request.setAsync(false);
-        request.setOneway(true);
+        request.setOneway(false);
         protocol.setBody(request);
         return protocol;
     }
