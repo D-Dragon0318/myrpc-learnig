@@ -10,6 +10,7 @@ import io.spridra.rpc.consumer.common.future.RPCFuture;
 import io.spridra.rpc.consumer.common.handler.RpcConsumerHandler;
 import io.spridra.rpc.consumer.common.initializer.RpcConsumerInitializer;
 import io.spridra.rpc.protocol.RpcProtocol;
+import io.spridra.rpc.protocol.header.RpcHeader;
 import io.spridra.rpc.protocol.request.RpcRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,7 +81,8 @@ public class RpcConsumer {
             handler = getRpcConsumerHandler(serviceAddress, port);
             handlerMap.put(key, handler);
         }
-        return handler.sendRequest(protocol);
+        RpcRequest request = protocol.getBody();
+        return handler.sendRequest(protocol,request.getAsync(),request.getOneway());
     }
 
     /**

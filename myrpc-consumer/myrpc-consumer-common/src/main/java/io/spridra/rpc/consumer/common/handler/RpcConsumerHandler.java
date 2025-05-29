@@ -6,6 +6,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.spridra.rpc.consumer.common.context.RpcContext;
 import io.spridra.rpc.consumer.common.future.RPCFuture;
 import io.spridra.rpc.protocol.RpcProtocol;
 import io.spridra.rpc.protocol.header.RpcHeader;
@@ -77,11 +78,15 @@ public class RpcConsumerHandler extends SimpleChannelInboundHandler<RpcProtocol<
         }
     }
 
-    /**
-     * 服务消费者向服务提供者发送请求
-     */
-    public RPCFuture sendRequest(RpcProtocol<RpcRequest> protocol){
+    public RPCFuture sendRequest(RpcProtocol<RpcRequest> protocol,boolean async,boolean oneway){
         logger.info("服务消费者发送的数据===>>>{}", JSONObject.toJSONString(protocol));
+        return oneway?this.sendRequestOneway(protocol) : async ? sendRequestAsync(protocol) : sendRequestSync(protocol);
+    }
+
+    /**
+     * 服务消费者向服务提供者发送同步请求
+     */
+    public RPCFuture sendRequestSync(RpcProtocol<RpcRequest> protocol){
         // channel.writeAndFlush(protocol).addListener((ChannelFutureListener) future -> {
         //     if (!future.isSuccess()) {
         //         logger.error("Send request failed", future.cause());
@@ -98,6 +103,26 @@ public class RpcConsumerHandler extends SimpleChannelInboundHandler<RpcProtocol<
         RPCFuture rpcFuture = this.getRpcFuture(protocol);
         channel.writeAndFlush(protocol);
         return rpcFuture;
+    }
+
+    /**
+     * 异步调用
+     * 服务消费者发送数据后，会通过RpcContext获取RPCFuture，进而获取最终结果
+     */
+    private RPCFuture sendRequestAsync(RpcProtocol<RpcRequest> protocol) {
+        RPCFuture rpcFuture = this.getRpcFuture(protocol);
+        //如果是异步调用，则将RPCFuture放入RpcContext
+        RpcContext.getContext().setRPCFuture(rpcFuture);
+        channel.writeAndFlush(protocol);
+        return null;
+    }
+
+    /**
+     * 单向调用，不关心结果
+     */
+    private RPCFuture sendRequestOneway(RpcProtocol<RpcRequest> protocol) {
+        channel.writeAndFlush(protocol);
+        return null;
     }
 
     private RPCFuture getRpcFuture(RpcProtocol<RpcRequest> protocol){
