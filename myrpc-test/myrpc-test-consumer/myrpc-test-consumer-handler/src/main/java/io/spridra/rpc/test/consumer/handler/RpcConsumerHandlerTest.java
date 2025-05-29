@@ -1,6 +1,7 @@
 package io.spridra.rpc.test.consumer.handler;
 
 import io.spridra.rpc.consumer.common.RpcConsumer;
+import io.spridra.rpc.consumer.common.future.RPCFuture;
 import io.spridra.rpc.protocol.RpcProtocol;
 import io.spridra.rpc.protocol.header.RpcHeaderFactory;
 import io.spridra.rpc.protocol.request.RpcRequest;
@@ -18,9 +19,10 @@ public class RpcConsumerHandlerTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(RpcConsumerHandlerTest.class);
     public static void main(String[] args) throws Exception {
         RpcConsumer consumer = RpcConsumer.getInstance();
-        Object result = consumer.sendRequest(getRpcRequestProtocol());
-        LOGGER.info("从服务消费者获取到的数据===>>>{}",result.toString());
-        Thread.sleep(2000);
+        RPCFuture future = consumer.sendRequest(getRpcRequestProtocol());
+        LOGGER.info("执行future.get前");
+        LOGGER.info("从服务消费者获取到的数据===>>>{}",future.get());
+        // Thread.sleep(2000);
         consumer.close();
     }
 

@@ -6,6 +6,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.spridra.rpc.consumer.common.future.RPCFuture;
 import io.spridra.rpc.protocol.RpcProtocol;
 import io.spridra.rpc.protocol.header.RpcHeader;
 import io.spridra.rpc.protocol.request.RpcRequest;
@@ -31,6 +32,7 @@ public class RpcConsumerHandler extends SimpleChannelInboundHandler<RpcProtocol<
     private volatile Channel channel;
     private SocketAddress remotePeer;
     private Map<Long,RpcProtocol<RpcResponse>> pendingResponse = new ConcurrentHashMap<>();
+    private Map<Long, RPCFuture> pendingRPC = new ConcurrentHashMap<>();
 
     public Channel getChannel() {
         return channel;
@@ -68,29 +70,43 @@ public class RpcConsumerHandler extends SimpleChannelInboundHandler<RpcProtocol<
         logger.info("服务消费者接收到的数据===>>>{}", JSONObject.toJSONString(protocol));
         RpcHeader header = protocol.getHeader();
         long requestId = header.getRequestId();
-        pendingResponse.put(requestId,protocol);
+        // pendingResponse.put(requestId,protocol);
+        RPCFuture rpcFuture = pendingRPC.remove(requestId);
+        if (rpcFuture != null){
+            rpcFuture.done(protocol);
+        }
     }
 
     /**
      * 服务消费者向服务提供者发送请求
      */
-    public Object sendRequest(RpcProtocol<RpcRequest> protocol){
+    public RPCFuture sendRequest(RpcProtocol<RpcRequest> protocol){
         logger.info("服务消费者发送的数据===>>>{}", JSONObject.toJSONString(protocol));
-        channel.writeAndFlush(protocol).addListener((ChannelFutureListener) future -> {
-            if (!future.isSuccess()) {
-                logger.error("Send request failed", future.cause());
-            }
-        });
-        RpcHeader header = protocol.getHeader();
-        long requestId = header.getRequestId();
-        while (true){
-            RpcProtocol<RpcResponse> responseRpcProtocol = pendingResponse.remove(requestId);
-            if (responseRpcProtocol != null){
-                return responseRpcProtocol.getBody().getResult();
-            }
-        }
+        // channel.writeAndFlush(protocol).addListener((ChannelFutureListener) future -> {
+        //     if (!future.isSuccess()) {
+        //         logger.error("Send request failed", future.cause());
+        //     }
+        // });
+        // RpcHeader header = protocol.getHeader();
+        // long requestId = header.getRequestId();
+        // while (true){
+        //     RpcProtocol<RpcResponse> responseRpcProtocol = pendingResponse.remove(requestId);
+        //     if (responseRpcProtocol != null){
+        //         return responseRpcProtocol.getBody().getResult();
+        //     }
+        // }
+        RPCFuture rpcFuture = this.getRpcFuture(protocol);
+        channel.writeAndFlush(protocol);
+        return rpcFuture;
     }
 
+    private RPCFuture getRpcFuture(RpcProtocol<RpcRequest> protocol){
+        RPCFuture rpcFuture = new RPCFuture(protocol);
+        RpcHeader header = protocol.getHeader();
+        long requestId = header.getRequestId();
+        pendingRPC.put(requestId,rpcFuture);
+        return rpcFuture;
+    }
     public void close() {
         channel.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
     }
