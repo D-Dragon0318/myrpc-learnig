@@ -1,9 +1,11 @@
-package io.spridra.rpc.test.consumer.codec.handler;
+package io.spridra.rpc.test.consumer.handler;
 
 import io.spridra.rpc.consumer.common.RpcConsumer;
 import io.spridra.rpc.protocol.RpcProtocol;
 import io.spridra.rpc.protocol.header.RpcHeaderFactory;
 import io.spridra.rpc.protocol.request.RpcRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @Author: Spridra
@@ -13,9 +15,11 @@ import io.spridra.rpc.protocol.request.RpcRequest;
  */
 
 public class RpcConsumerHandlerTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RpcConsumerHandlerTest.class);
     public static void main(String[] args) throws Exception {
         RpcConsumer consumer = RpcConsumer.getInstance();
-        consumer.sendRequest(getRpcRequestProtocol());
+        Object result = consumer.sendRequest(getRpcRequestProtocol());
+        LOGGER.info("从服务消费者获取到的数据===>>>{}",result.toString());
         Thread.sleep(2000);
         consumer.close();
     }

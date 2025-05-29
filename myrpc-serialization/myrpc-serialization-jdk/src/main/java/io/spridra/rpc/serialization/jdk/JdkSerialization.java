@@ -19,7 +19,8 @@ public class JdkSerialization implements Serialization {
     private final Logger logger = LoggerFactory.getLogger(JdkSerialization.class);
     @Override
     public <T> byte[] serialize(T obj) {
-        logger.info("execute jdk serialize...");
+        // logger.info("execute serialize...");
+        logger.info("==编码==>>");
         if (obj == null){
             throw new SerializerException("serialize object is null");
         }
@@ -35,7 +36,8 @@ public class JdkSerialization implements Serialization {
 
     @Override
     public <T> T deserialize(byte[] data, Class<T> cls) {
-        logger.info("execute jdk deserialize...");
+        // logger.info("execute deserialize...");
+        logger.info("==解码==>>");
         if (data == null){
             throw new SerializerException("deserialize data is null");
         }
