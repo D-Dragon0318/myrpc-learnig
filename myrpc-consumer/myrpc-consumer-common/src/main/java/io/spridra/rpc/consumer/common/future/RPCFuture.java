@@ -104,6 +104,7 @@ public class RPCFuture extends CompletableFuture<Object> {
     private void invokeCallbacks() {
         lock.lock();
         try {
+            //可能会有多个回调，所以需要加锁
             for (final AsyncRPCCallback callback : pendingCallbacks) {
                 runCallback(callback);
             }
