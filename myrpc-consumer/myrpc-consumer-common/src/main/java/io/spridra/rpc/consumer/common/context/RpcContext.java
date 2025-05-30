@@ -1,6 +1,7 @@
 package io.spridra.rpc.consumer.common.context;
 
-import io.spridra.rpc.consumer.common.future.RPCFuture;
+
+import io.spridra.rpc.proxy.api.future.RPCFuture;
 
 /**
  * @Author: Spridra

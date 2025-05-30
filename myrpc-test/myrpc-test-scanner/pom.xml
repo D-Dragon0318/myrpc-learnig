@@ -19,6 +19,11 @@
     </properties>
 
     <dependencies>
+<!--        <dependency>-->
+<!--            <groupId>io.spridra.rpc</groupId>-->
+<!--            <artifactId>rpc-annotation</artifactId>-->
+<!--            <version>${project.version}</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>io.spridra.rpc</groupId>
             <artifactId>myrpc-common</artifactId>

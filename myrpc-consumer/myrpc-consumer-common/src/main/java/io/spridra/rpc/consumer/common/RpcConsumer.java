@@ -6,12 +6,12 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.spridra.rpc.consumer.common.future.RPCFuture;
 import io.spridra.rpc.consumer.common.handler.RpcConsumerHandler;
 import io.spridra.rpc.consumer.common.initializer.RpcConsumerInitializer;
 import io.spridra.rpc.protocol.RpcProtocol;
-import io.spridra.rpc.protocol.header.RpcHeader;
 import io.spridra.rpc.protocol.request.RpcRequest;
+import io.spridra.rpc.proxy.api.consumer.Consumer;
+import io.spridra.rpc.proxy.api.future.RPCFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Version: 1.0
  */
 
-public class RpcConsumer {
+public class RpcConsumer implements Consumer {
 
     private final Logger logger = LoggerFactory.getLogger(RpcConsumer.class);
     //Netty 客户端启动器

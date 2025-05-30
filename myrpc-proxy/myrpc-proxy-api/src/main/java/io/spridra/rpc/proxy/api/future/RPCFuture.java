@@ -1,10 +1,11 @@
-package io.spridra.rpc.consumer.common.future;
+package io.spridra.rpc.proxy.api.future;
 
-import io.spridra.rpc.consumer.common.callback.AsyncRPCCallback;
-import io.spridra.rpc.consumer.common.threadpool.ClientThreadPool;
+import io.spridra.rpc.common.threadpool.ClientThreadPool;
+import io.spridra.rpc.proxy.api.callback.AsyncRPCCallback;
 import io.spridra.rpc.protocol.RpcProtocol;
 import io.spridra.rpc.protocol.request.RpcRequest;
 import io.spridra.rpc.protocol.response.RpcResponse;
+import io.spridra.rpc.proxy.api.callback.AsyncRPCCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,7 +92,7 @@ public class RPCFuture extends CompletableFuture<Object> {
     }
 
     public void done(RpcProtocol<RpcResponse> responseRpcProtocol) {
-        LOGGER.info("done==>>");
+        LOGGER.info("done执行啦==>>");
         this.responseRpcProtocol = responseRpcProtocol;
         sync.release(1);
         invokeCallbacks();

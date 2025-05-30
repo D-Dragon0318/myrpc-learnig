@@ -7,11 +7,11 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.spridra.rpc.consumer.common.context.RpcContext;
-import io.spridra.rpc.consumer.common.future.RPCFuture;
 import io.spridra.rpc.protocol.RpcProtocol;
 import io.spridra.rpc.protocol.header.RpcHeader;
 import io.spridra.rpc.protocol.request.RpcRequest;
 import io.spridra.rpc.protocol.response.RpcResponse;
+import io.spridra.rpc.proxy.api.future.RPCFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

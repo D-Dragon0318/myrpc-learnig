@@ -1,4 +1,4 @@
-package io.spridra.rpc.consumer.common.threadpool;
+package io.spridra.rpc.common.threadpool;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;

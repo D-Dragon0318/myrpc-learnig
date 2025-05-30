@@ -1,4 +1,4 @@
-package io.spridra.rpc.consumer.common.callback;
+package io.spridra.rpc.proxy.api.callback;
 
 /**
  * @Author: Spridra

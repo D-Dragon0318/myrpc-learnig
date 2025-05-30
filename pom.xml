@@ -18,6 +18,7 @@
         <module>myrpc-serialization</module>
         <module>myrpc-codec</module>
         <module>myrpc-consumer</module>
+        <module>myrpc-proxy</module>
     </modules>
 
     <properties>

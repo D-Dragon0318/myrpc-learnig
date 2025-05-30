@@ -5,23 +5,23 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>io.spridra.rpc</groupId>
-        <artifactId>myrpc-test-consumer</artifactId>
+        <artifactId>myrpc-learnig</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>myrpc-test-consumer-handler</artifactId>
+    <artifactId>myrpc-proxy</artifactId>
+    <packaging>pom</packaging>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    <dependencies>
-        <dependency>
-            <groupId>io.spridra.rpc</groupId>
-            <artifactId>myrpc-consumer-common</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-    </dependencies>
+    <modules>
+        <module>myrpc-proxy-api</module>
+        <module>myrpc-proxy-jdk</module>
+    </modules>
+
+
 
 </project>

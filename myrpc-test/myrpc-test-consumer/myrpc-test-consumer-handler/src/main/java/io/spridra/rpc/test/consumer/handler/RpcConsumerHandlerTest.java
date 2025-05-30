@@ -1,12 +1,12 @@
 package io.spridra.rpc.test.consumer.handler;
 
 import io.spridra.rpc.consumer.common.RpcConsumer;
-import io.spridra.rpc.consumer.common.callback.AsyncRPCCallback;
 import io.spridra.rpc.consumer.common.context.RpcContext;
-import io.spridra.rpc.consumer.common.future.RPCFuture;
 import io.spridra.rpc.protocol.RpcProtocol;
 import io.spridra.rpc.protocol.header.RpcHeaderFactory;
 import io.spridra.rpc.protocol.request.RpcRequest;
+import io.spridra.rpc.proxy.api.callback.AsyncRPCCallback;
+import io.spridra.rpc.proxy.api.future.RPCFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
