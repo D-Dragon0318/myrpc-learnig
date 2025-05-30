@@ -1,7 +1,10 @@
 package io.spridra.rpc.consumer.common.context;
 
 
+import io.spridra.rpc.consumer.common.RpcConsumer;
 import io.spridra.rpc.proxy.api.future.RPCFuture;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @Author: Spridra
@@ -11,6 +14,7 @@ import io.spridra.rpc.proxy.api.future.RPCFuture;
  */
 
 public class RpcContext {
+    private final Logger logger = LoggerFactory.getLogger(RpcContext.class);
     private RpcContext(){
     }
 
@@ -30,6 +34,7 @@ public class RpcContext {
      * @return RPC服务的上下文信息
      */
     public static RpcContext getContext(){
+
         return AGENT;
     }
 
@@ -38,6 +43,7 @@ public class RpcContext {
      * @param rpcFuture
      */
     public void setRPCFuture(RPCFuture rpcFuture){
+        logger.info("RPCFuture被保存了，setRPCFuture: {}", rpcFuture);
         RPC_FUTURE_INHERITABLE_THREAD_LOCAL.set(rpcFuture);
     }
 
@@ -45,6 +51,7 @@ public class RpcContext {
      * 获取RPCFuture
      */
     public RPCFuture getRPCFuture(){
+        logger.info("RPCFuture被获取了，getRPCFuture: {}", RPC_FUTURE_INHERITABLE_THREAD_LOCAL.get());
         return RPC_FUTURE_INHERITABLE_THREAD_LOCAL.get();
     }
 
@@ -52,6 +59,7 @@ public class RpcContext {
      * 移除RPCFuture
      */
     public void removeRPCFuture(){
+        logger.info("RPCFuture被移除了，removeRPCFuture: {}", RPC_FUTURE_INHERITABLE_THREAD_LOCAL.get());
         RPC_FUTURE_INHERITABLE_THREAD_LOCAL.remove();
     }
 }

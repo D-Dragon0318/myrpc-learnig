@@ -74,6 +74,7 @@ public class RpcConsumerHandler extends SimpleChannelInboundHandler<RpcProtocol<
         // pendingResponse.put(requestId,protocol);
         RPCFuture rpcFuture = pendingRPC.remove(requestId);
         if (rpcFuture != null){
+            logger.info("开始执行rpcFuture.done");
             rpcFuture.done(protocol);
         }
     }
@@ -87,6 +88,7 @@ public class RpcConsumerHandler extends SimpleChannelInboundHandler<RpcProtocol<
      * 服务消费者向服务提供者发送同步请求
      */
     public RPCFuture sendRequestSync(RpcProtocol<RpcRequest> protocol){
+        logger.info("同步请求==>>>");
         // channel.writeAndFlush(protocol).addListener((ChannelFutureListener) future -> {
         //     if (!future.isSuccess()) {
         //         logger.error("Send request failed", future.cause());
@@ -110,6 +112,7 @@ public class RpcConsumerHandler extends SimpleChannelInboundHandler<RpcProtocol<
      * 服务消费者发送数据后，会通过RpcContext获取RPCFuture，进而获取最终结果
      */
     private RPCFuture sendRequestAsync(RpcProtocol<RpcRequest> protocol) {
+        logger.info("异步请求==>>>");
         RPCFuture rpcFuture = this.getRpcFuture(protocol);
         //如果是异步调用，则将RPCFuture放入RpcContext
         RpcContext.getContext().setRPCFuture(rpcFuture);

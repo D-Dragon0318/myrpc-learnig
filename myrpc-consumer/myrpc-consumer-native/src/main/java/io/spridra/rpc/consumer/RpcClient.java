@@ -1,6 +1,8 @@
 package io.spridra.rpc.consumer;
 
 import io.spridra.rpc.consumer.common.RpcConsumer;
+import io.spridra.rpc.proxy.api.async.IAsyncObjectProxy;
+import io.spridra.rpc.proxy.api.object.ObjectProxy;
 import io.spridra.rpc.proxy.jdk.JdkProxyFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +65,13 @@ public class RpcClient {
     public <T> T create(Class<T> interfaceClass) {
         JdkProxyFactory<T> jdkProxyFactory = new JdkProxyFactory<T>(serviceVersion, serviceGroup, serializationType, timeout, RpcConsumer.getInstance(), async, oneway);
         return jdkProxyFactory.getProxy(interfaceClass);
+    }
+
+    /**
+     * 创建异步代理对象
+     */
+    public <T> IAsyncObjectProxy createAsync(Class<T> interfaceClass) {
+        return new ObjectProxy<T>(interfaceClass, serviceVersion, serviceGroup, serializationType, timeout, RpcConsumer.getInstance(), async, oneway);
     }
 
     public void shutdown() {

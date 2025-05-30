@@ -94,6 +94,7 @@ public class RPCFuture extends CompletableFuture<Object> {
     public void done(RpcProtocol<RpcResponse> responseRpcProtocol) {
         LOGGER.info("done执行啦==>>");
         this.responseRpcProtocol = responseRpcProtocol;
+        LOGGER.info("唤醒sync");
         sync.release(1);
         invokeCallbacks();
         // Threshold
@@ -105,6 +106,7 @@ public class RPCFuture extends CompletableFuture<Object> {
     private void invokeCallbacks() {
         lock.lock();
         try {
+            LOGGER.info("开始执行回调函数...");
             //可能会有多个回调，所以需要加锁
             for (final AsyncRPCCallback callback : pendingCallbacks) {
                 runCallback(callback);
